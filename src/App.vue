@@ -1,45 +1,47 @@
 <template>
-  <main role="main">
+  <div>
     <h1>Filter box examples</h1>
-    <div class="flex">
-      <div>
-        <h2>Multiple select</h2>
-        <filter-box
-          v-model="selectedOptions"
-          drop-id="first"
-          :options="options"
-          :search="true"
-          :multiple="true"
-          :is-expanded="true"
-          panel-header="First Options"
-          :texts="optionsTexts"
-          :sort-selected-first="true"
-          :display-max="150"
-          />
+    <main>
+      <div class="flex">
+        <div>
+          <h2>Multiple select</h2>
+          <filter-box
+            v-model="selectedOptions"
+            drop-id="first"
+            :options="options"
+            :search="true"
+            :multiple="true"
+            :is-expanded="true"
+            panel-header="First Options"
+            :texts="optionsTexts"
+            :sort-selected-first="true"
+            :display-max="150"
+            />
           <h3>Selected values: {{ selectedOptions }}</h3>
-      </div>
-      <div>
-        <h2>Single select</h2>
-        <filter-box
-          v-model="selectedOptions2"
-          drop-id="second"
-          :options="options"
-          :search="true"
-          :multiple="false"
-          :is-expanded="true"
-          panel-header="Second Options"
-          :texts="optionsTexts"
-          :sort-selected-first="false"
-          :display-max="100"
-          />
+        </div>
+        <div>
+          <h2>Single select</h2>
+          <filter-box
+            v-model="selectedOptions2"
+            drop-id="second"
+            :options="options"
+            :search="true"
+            :multiple="false"
+            :is-expanded="true"
+            panel-header="Second Options"
+            :texts="optionsTexts"
+            :sort-selected-first="false"
+            :display-max="100"
+            />
           <h3>Selected value: {{ selectedOptions2 }}</h3>
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </div>
 </template>
 
 <script setup>
-import { ref  } from 'vue';
+import { ref } from 'vue';
 import FilterBox from './components/FilterBox.vue';
 
 const optionsTexts = {
@@ -48,10 +50,10 @@ const optionsTexts = {
   empty: 'No results',
 };
 
-let selectedOptions = ref([]);
-let selectedOptions2 = ref(null);
+const selectedOptions = ref([]);
+const selectedOptions2 = ref(null);
 
-const options= [{
+const options = [{
   text: 'Afghanistan',
   value: 'AFG',
   count: '004',
@@ -1303,6 +1305,8 @@ const options= [{
 <style scoped>
 h1 {
   text-align: center;
+  color: #ffffff;
+  text-shadow: 1px 1px #110316;
 }
 main {
   margin: 30px auto 0;

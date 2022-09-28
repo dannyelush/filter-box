@@ -12,7 +12,12 @@
     "vue": "^3.2.37"
   },
   "devDependencies": {
+    "@babel/core": "^7.19.3",
+    "@babel/eslint-parser": "^7.19.1",
     "@vitejs/plugin-vue": "^3.1.0",
+    "@vue/eslint-config-airbnb": "^7.0.0",
+    "eslint": "^8.24.0",
+    "eslint-plugin-vue": "^9.5.1",
     "vite": "^3.1.0"
   }
 }

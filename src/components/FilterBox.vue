@@ -1,13 +1,13 @@
-
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="filter-box-container">
     <div class="panel panel-default">
       <div class="panel-heading">
         <a
           ref="panelcollapse"
-          :href="'#panel-expanded-'+dropId"
+          :href="'#panel-expanded-' + dropId"
           :class="{
-            'collapsed': toggled,
+            collapsed: toggled,
           }"
           role="button"
           data-toggle="panel-collapse"
@@ -16,13 +16,13 @@
           {{ panelHeader }}
           <span
             class="toggle-sign"
-            v-html="toggled ? escapedColapsedIcon : escapedColapseIcon">
-          </span>
+            v-html="toggled ? escapedCollapsedIcon : escapedCollapseIcon"
+            />
         </a>
       </div>
 
       <div
-        :id="'panel-expanded-'+dropId"
+        :id="'panel-expanded-' + dropId"
         ref="panelbody"
         class="panel-collapse collapsed"
         >
@@ -36,7 +36,6 @@
                 v-model="filter"
                 class="form-control"
                 :placeholder="mergedTexts.searchText"
-                autofocus="autofocus"
                 aria-label="search"
                 >
             </div>
@@ -70,6 +69,7 @@
                   active: !multiple && !!selected[option.value],
                   disabled: option.disabled,
                   'has-header': !!option.parentHeader,
+                  multiple: multiple,
                 }"
                 >
                 <span
@@ -78,30 +78,31 @@
                   <label
                     :for="dropId + '-' + option.value"
                     class="simple-label"
-                    :class="{'disabled': option.disabled}"
+                    :class="{ disabled: option.disabled }"
                     >
                     <input
                       :id="dropId + '-' + option.value"
                       :type="multiple ? 'checkbox' : 'radio'"
                       :disabled="option.disabled"
-                      :checked="multiple ? modelValue.indexOf(option.value) > -1 :
-                        modelValue === option.value"
+                      :checked="multiple ? modelValue.indexOf(option.value) > -1
+                        : modelValue === option.value"
                       @change="select($event, option.value)"
                       @click="click($event, option.value)"
                       >
                     <span
                       v-if="option.icon"
                       class="icon-container"
-                      v-html="escapeTextSafe(option.icon)">
-                    </span>{{ option.text }}
+                      v-html="escapeTextSafe(option.icon)"
+                      />{{ option.text }}
                     <span class="pull-right pr-0">
                       <span
                         v-if="option.count !== undefined"
                         class="text-note p-0"
                         >({{ option.count }})</span>
                       <span
+                        v-if="!multiple && modelValue === option.value"
                         class="checked"
-                        v-if="!multiple && modelValue === option.value">
+                        >
                         &#10004;
                       </span>
                     </span>
@@ -122,7 +123,7 @@
 
     <div
       v-if="linearOptions.length > displayMax"
-      class="big-popup" 
+      class="big-popup"
       :class="{ open: isOpen }"
       >
       <div class="popup-header">
@@ -145,7 +146,6 @@
             v-model="filter"
             class="form-control"
             :placeholder="mergedTexts.searchText"
-            autofocus="autofocus"
             aria-label="search"
             >
         </div>
@@ -163,42 +163,45 @@
             v-for="key in Object.keys(groupedOptions)"
             :key="key"
             >
-            <h3 class="group-heading">{{ key }}</h3>
+            <h3 class="group-heading">
+              {{ key }}
+            </h3>
             <div class="letter-elements">
               <div
                 v-for="item in groupedOptions[key]"
                 :key="item.value"
                 class="letter-item simple-option"
                 :class="{
-                  'active': !multiple && popupSelected && popupSelected.indexOf(item.value) > -1,
-                  }"
+                  active: !multiple && popupSelected && popupSelected.indexOf(item.value) > -1,
+                }"
                 >
                 <label
                   :for="dropId + '-popup-item-' + item.value"
                   class="simple-label"
-                  :class="{'disabled': item.disabled}"
+                  :class="{ disabled: item.disabled }"
                   >
                   <input
                     :id="dropId + '-popup-item-' + item.value"
                     :type="multiple ? 'checkbox' : 'radio'"
                     :disabled="item.disabled"
-                    :checked="multiple ? popupSelected.indexOf(item.value) > -1 :
-                      popupSelected === item.value"
+                    :checked="multiple ? popupSelected.indexOf(item.value) > -1
+                      : popupSelected === item.value"
                     @click="click($event, item.value)"
                     @change="selectFromPopup($event, item.value)"
                     >
                   <span
                     v-if="item.icon"
                     class="icon-container"
-                    v-html="escapeTextSafe(item.icon)">
-                  </span>{{ item.text }}
+                    v-html="escapeTextSafe(item.icon)"
+                    />{{ item.text }}
                   <span
                     v-if="item.count !== undefined"
                     class="text-note"
                     >({{ item.count }})</span>
                   <span
+                    v-if="!multiple && popupSelected === item.value"
                     class="checked pull-right"
-                    v-if="!multiple && popupSelected === item.value">
+                    >
                     &#10004;
                   </span>
                 </label>
@@ -228,7 +231,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted  } from 'vue'
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
 
 const props = defineProps({
   modelValue: {
@@ -297,33 +300,30 @@ function getDefaultValue() {
     return [];
   }
   return null;
-};
+}
 
-let myValue = ref(getDefaultValue());
-let filter = ref('');
-let dropup = ref(false);
-let isOpen = ref(false);
-let popupSelected = ref([]);
-let toggled = ref(false);
+const myValue = ref(getDefaultValue());
+const filter = ref('');
+const isOpen = ref(false);
+const popupSelected = ref([]);
+const toggled = ref(false);
 
-const mergedTexts = computed(() => {
-  return {
-    searchText: 'Search',
-    empty: 'No results',
-    showMore: 'Show more',
-    collapsedIcon: '-',
-    collapseIcon: '+',
-    placeholder: 'No options to display',
-    ...props.texts,
-  };
-});
+const mergedTexts = computed(() => ({
+  searchText: 'Search',
+  empty: 'No results',
+  showMore: 'Show more',
+  collapsedIcon: '-',
+  collapseIcon: '+',
+  placeholder: 'No options to display',
+  ...props.texts,
+}));
 
 const safeTags = ['b', 'i', 'em', 'strong'];
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.appendChild(document.createTextNode(str));
   return div.innerHTML;
-};
+}
 
 function escapeTextSafe(nonEscapedText) {
   let text = escapeHtml(nonEscapedText);
@@ -333,15 +333,11 @@ function escapeTextSafe(nonEscapedText) {
     text = text.replace(new RegExp(`&lt;/${t}&gt;`, 'ig'), `</${t}>`);
   });
   return text;
-};
+}
 
-const escapedColapsedIcon = computed(() => {
-  return escapeTextSafe(mergedTexts.value.collapsedIcon);
-});
+const escapedCollapsedIcon = computed(() => escapeTextSafe(mergedTexts.value.collapsedIcon));
 
-const escapedColapseIcon = computed(() => {
-  return escapeTextSafe(mergedTexts.value.collapseIcon);
-});
+const escapedCollapseIcon = computed(() => escapeTextSafe(mergedTexts.value.collapseIcon));
 
 function getOptionsMap(options, map = {}) {
   return options.value.reduce((m, o) => {
@@ -350,38 +346,34 @@ function getOptionsMap(options, map = {}) {
     }
     return m;
   }, map);
-};
+}
 
-const linearOptions = computed(() => {
-  return props.options.reduce((f, o) => {
-    if (o.options) {
-      // push the header
-      f.push({
-        header: o.label,
-      });
-      f.push(...o.options.map((opt) => Object.assign(opt, { parentHeader: o.label })));
-    } else {
-      // it's an item without group, push it to the list
-      f.push(o);
-    }
-    return f;
-  }, []);
-});
+const linearOptions = computed(() => props.options.reduce((f, o) => {
+  if (o.options) {
+    // push the header
+    f.push({
+      header: o.label,
+    });
+    f.push(...o.options.map((opt) => Object.assign(opt, { parentHeader: o.label })));
+  } else {
+    // it's an item without group, push it to the list
+    f.push(o);
+  }
+  return f;
+}, []));
 
-const optionsMap = computed(() => {
-  // For the optionsMap, use all options, not just the filtered ones
-  // so that selecting values searches entire list
-  return getOptionsMap(linearOptions);
-});
+// For the optionsMap, use all options, not just the filtered ones
+// so that selecting values searches entire list
+const optionsMap = computed(() => getOptionsMap(linearOptions));
 
 const selected = computed(() => {
-  let selected = {};
+  let selectedValue = {};
   if (myValue.value != null) {
     let theVal = myValue.value;
     if (!props.multiple) {
       theVal = [myValue.value];
     }
-    selected = theVal.reduce((s, v) => {
+    selectedValue = theVal.reduce((s, v) => {
       if (optionsMap.value[v]) {
         Object.assign(s, {
           [v]: optionsMap.value[v],
@@ -390,20 +382,20 @@ const selected = computed(() => {
       return s;
     }, {});
   }
-  return selected;
+  return selectedValue;
 });
+
+const filterRegExp = computed(() => new RegExp(`${filter.value}`, 'ig'));
 
 function textMatch(text) {
   return text ? text.match(filterRegExp.value) !== null : true;
-};
+}
 
 function optionMatch(o) {
   const textMatches = textMatch(o.text || o.header);
   return textMatches;
-};
-const filtered = computed(() => {
-  return linearOptions.value.filter(optionMatch);
-});
+}
+const filtered = computed(() => linearOptions.value.filter(optionMatch));
 
 const groupedOptions = computed(() => {
   const groups = filtered.value.reduce((r, e) => {
@@ -423,13 +415,7 @@ const groupedOptions = computed(() => {
   return sortedGroups;
 });
 
-const emptyResults = computed(() => {
-  return props.search && filtered.value.length === 0 && filter;
-});
-
-const filterRegExp = computed(() => {
-  return new RegExp(`${filter.value}`, 'ig');
-});
+const emptyResults = computed(() => props.search && filtered.value.length === 0 && filter);
 
 watch(myValue, (newMyValue) => {
   emit('update:modelValue', newMyValue);
@@ -452,7 +438,7 @@ function validateOptions(options, l = 0) {
       console.warn(`No text specified for entry at position ${i}, level ${l}`);
     }
   });
-};
+}
 
 const sorter = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 
@@ -463,9 +449,9 @@ function sortSelectedFirstFunction(a, b) {
   const aIsSelected = (props.modelValue.indexOf(a.value) === -1) + a.text;
   const bIsSelected = (props.modelValue.indexOf(b.value) === -1) + b.text;
   return sorter.compare(aIsSelected, bIsSelected);
-};
+}
 
-watch(() => props.options, async (newModelValue) => {
+watch(() => props.options, async () => {
   validateOptions(props.options);
 
   await nextTick();
@@ -477,13 +463,19 @@ watch(() => props.options, async (newModelValue) => {
 
 watch(() => props.isExpanded, (newIsExpanded) => {
   toggled.value = !newIsExpanded;
-}, { immediate: true});
+}, { immediate: true });
 
 watch(filter, (newFilter) => {
   emit('filter', newFilter);
 });
 
 const panelcollapse = ref(null);
+
+function closePopup() {
+  isOpen.value = false;
+  filter.value = '';
+  popupSelected.value = props.multiple ? [...myValue.value] : myValue.value;
+}
 
 onMounted(() => {
   document.addEventListener('click', (event) => {
@@ -515,7 +507,7 @@ function click(e) {
       myValue.value = '';
     }
   }
-};
+}
 
 function select(e, val) {
   e.preventDefault();
@@ -542,7 +534,7 @@ function select(e, val) {
   }
   popupSelected.value = props.multiple ? [...newVal] : newVal;
   myValue.value = newVal;
-};
+}
 
 function selectFromPopup(e, val) {
   e.preventDefault();
@@ -565,7 +557,7 @@ function selectFromPopup(e, val) {
     // for single mode, just set it directly
     popupSelected.value = val;
   }
-};
+}
 
 function selectNone() {
   if (props.multiple) {
@@ -573,25 +565,20 @@ function selectNone() {
   } else {
     myValue.value = null;
   }
-};
+}
 function togglePopup() {
   isOpen.value = !isOpen.value;
   filter.value = '';
-};
-function closePopup() {
-  isOpen.value = false;
-  filter.value = '';
-  popupSelected.value = props.multiple ? [...myValue.value] : myValue.value;
-};
+}
 
 function removeFilters() {
   selectNone();
   closePopup();
-};
+}
 function applyFilters() {
   myValue.value = props.multiple ? [...popupSelected.value] : popupSelected.value;
   closePopup();
-};
+}
 </script>
 
 <style scoped>
@@ -619,7 +606,7 @@ input[type="radio"] {
 
 .simple-label.disabled {
   color: #C4CDD5;
-  cursor: default;  
+  cursor: default;
 }
 
 .simple-label.disabled .text-note {
@@ -630,6 +617,9 @@ input[type="radio"] {
   padding-left: 10px;
   padding-right: 10px;
   border-left: 3px solid transparent;
+}
+.simple-option.multiple {
+  padding-left: 0;
 }
 .simple-option:hover {
   background-color: #E8F8FF;
@@ -678,7 +668,7 @@ input[type="radio"] {
 }
 .panel .panel-heading .panel-toggle .toggle-sign {
   float: right;
-  color: #516373;      
+  color: #516373;
 }
 .panel .panel-collapse {
   overflow: visible;
@@ -691,7 +681,7 @@ input[type="radio"] {
 .panel-collapse .panel-body {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
-  padding: 10px 0 20px 20px;    
+  padding: 10px 0 20px 20px;
 }
 
 .form-control {
@@ -746,7 +736,7 @@ input[type="radio"] {
 }
 .dropdown-menu > li > span {
   padding-left: 0;
-  padding-right: 0;    
+  padding-right: 0;
 }
 .showMoreLink {
   margin-top: 5px;
@@ -774,7 +764,7 @@ input[type="radio"] {
   cursor: pointer;
   background: transparent;
   border: 0;
-  -webkit-appearance: none;  
+  -webkit-appearance: none;
 }
 .popup-body {
   padding: 10px 0 0 0;
@@ -799,7 +789,7 @@ input[type="radio"] {
   font-size: 18px;
   font-weight: 400;
   line-height: 20px;
-  color: #263238;    
+  color: #263238;
 }
 .popup-body .letter-elements {
   display: flex;
@@ -813,7 +803,7 @@ input[type="radio"] {
 }
 
 .popup-body .letter-item:nth-child(3) {
-  margin-right: 0;  
+  margin-right: 0;
 }
 .popup-footer {
   border-top: 1px solid #C4CDD5;
@@ -842,7 +832,7 @@ input[type="radio"] {
   margin-top: 20px;
   width: 100%;
 }
-.dropdown-menu > li > a {    
+.dropdown-menu > li > a {
   position: relative;
   padding-right: 26px;
   text-overflow: ellipsis;
