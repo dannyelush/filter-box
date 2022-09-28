@@ -64,12 +64,12 @@
                   .slice(0, Math.min(linearOptions.length, displayMax))"
                 :key="option.value || option.header"
                 :data-value="option.value"
+                class="simple-option"
                 :class="{
                   'dropdown-header': option.header,
                   active: !multiple && !!selected[option.value],
                   disabled: option.disabled,
                   'has-header': !!option.parentHeader,
-                  'simple-option': !multiple,
                 }"
                 >
                 <span
@@ -168,9 +168,8 @@
               <div
                 v-for="item in groupedOptions[key]"
                 :key="item.value"
-                class="letter-item"
+                class="letter-item simple-option"
                 :class="{
-                  'simple-option': !multiple,
                   'active': !multiple && popupSelected && popupSelected.indexOf(item.value) > -1,
                   }"
                 >
@@ -611,6 +610,7 @@ input[type="radio"] {
   cursor: pointer;
   font-size: 14px;
   line-height: 26px;
+  display: block;
 }
 
 .simple-label input[type='radio'] {
